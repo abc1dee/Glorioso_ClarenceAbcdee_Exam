@@ -1,16 +1,13 @@
 # PurpleBug Internship Exam - E-Commerce Web Application
 
-![Banner Placeholder](assets/images/banner_placeholder.png)
-*(Insert your banner image above)*
-
-## 📖 Introduction
+## Introduction
 Welcome to my PurpleBug Internship Exam project! This is a full-stack **E-commerce web application** showcasing both Customer and Administrator functionalities. It is built natively on a **Laravel 11** backend API and a **Vue 3** frontend environment. 
 
 The application strictly complies with exam requirements, including secure authentication, timed session locks (after 5 failed logins), and automatic inactivity timeouts, alongside comprehensive CRUD product management and a dynamic shopping cart.
 
 ---
 
-## 🛠 Tools & Technologies Used
+## Tools & Technologies Used
 ### Backend (API)
 * **PHP 8+** (Runs via XAMPP)
 * **Laravel 11** (Framework)
@@ -28,7 +25,7 @@ The application strictly complies with exam requirements, including secure authe
 
 ---
 
-## ✨ Features
+## Features
 ### 1. Security & Authentication (Exam Requirements)
 * **Role-Based Access**: Distinguishes between `Admin` and `Guest/User`.
 * **Failed Login Lockout**: Automatically locks a user's account for 5 minutes after 5 consecutive failed login attempts.
@@ -36,19 +33,19 @@ The application strictly complies with exam requirements, including secure authe
 * **Route Protection**: Certain pages are masked. E.g., Guests can browse products but must log in to add items to their cart.
 
 ### 2. Admin Dashboard
-* **Product Management**: Full CRUD (Create, Read, Update, Delete) capability directly linked to the layout. Also supports uploading locally stored product images.
-* **User Management**: Administrators can add, edit, and safely delete users. Includes a toggle to manually mark guest accounts as **Active** or **Inactive** to suspend access.
-* **Orders Management**: Track user orders, mark order statuses *(Pending, Shipped, Delivered, Cancelled)*.
-* **Activity Logs**: Integrated event tracking to record user activities traversing the system.
+* **Product Management**: Full CRUD capability perfectly matching the design mockups. Supports uploading locally stored product images.
+* **User Management**: Administrators can add, edit, and safely delete users. Includes a toggle to manually suspend guest accounts via Active/Inactive statuses.
+* **Orders Management**: Track user orders and seamlessly shift between statuses (Pending, Delivery, Delivered, Cancelled).
+* **Activity Logs**: Integrated event tracking to record user activities.
 
 ### 3. Customer Storefront
-* **Product Browsing**: Search functionality combined with ascending/descending price sorting and pagination.
-* **Shopping Cart**: Dynamic cart management saving sessions directly referencing locally tracked Pinia stores or backend Database carts.
+* **Product Browsing**: Clean product landing view with searching and price sorting.
+* **Shopping Cart**: Dynamic cart management explicitly keeping track of stock.
 * **Checkout Flow**: Interactive "Thank You" modal upon successful purchase placement.
 
 ---
 
-## 🚀 Beginner's Installation Guide
+## Installation Guide
 
 If you are evaluating this project on your local machine using Windows and **XAMPP**, follow these step-by-step instructions.
 
@@ -90,9 +87,9 @@ cd purplebug-exam
      DB_CONNECTION=mysql
      DB_HOST=127.0.0.1
      DB_PORT=3306
-     DB_DATABASE=purplebug_exam    <-- (The database you just created)
-     DB_USERNAME=root              <-- (Default XAMPP username)
-     DB_PASSWORD=                  <-- (Leave blank for default XAMPP)
+     DB_DATABASE=purplebug_exam
+     DB_USERNAME=root
+     DB_PASSWORD=
      ```
 
 3. **Generate Application Key**:
@@ -137,7 +134,7 @@ cd purplebug-frontend
 
 ---
 
-## 🔑 How to Access the Application
+## How to Access the Application
 
 ### Guest / Customer
 * Simply open your Vite URL (e.g., `http://localhost:5173/`).
@@ -153,17 +150,65 @@ Because we ran the database seeder above, a master Admin account has already bee
 
 ---
 
-## 📷 Screenshots
-*(Replace these paths with actual visual snippets of your application)*
+## System Screenshots
 
-**1. Products Landing View**
-![Products View](assets/images/placeholder_products.png)
+### Customer Storefront
 
-**2. Product Modification Modal (Admin)**
-![Admin Add Modal](assets/images/placeholder_admin.png)
+**Product Landing Page**
+*(Product landing of the website)*
+![Product Landing](ProductListing.png)
 
-**3. Checkout Success Modal**
-![Checkout Flow](assets/images/placeholder_success.png)
+**Customer Cart (With Products)**
+*(Customer's cart with products on it)*
+![Cart with Products](Cart.png)
+
+**Empty Cart (After Checkout)**
+*(Customer's cart after placing order)*
+![Empty Cart](CartEmpty.png)
+
+**Checkout Success Modal**
+*(Thank you popup modal)*
+![Thank You Modal](Thankyou.png)
+
+### Authentication & Exam Security Requirements
+
+**Registration Page**
+*(Registration page of the site)*
+![Register Page](Register.png)
+
+**Unique Email Validation**
+*(Verification showing that only unique emails can be registered)*
+![Unique Email](UniqueEmail.png)
+
+**Account Locked (5 Failed Attempts for 5 minutes)**
+*(Verification showing account is locked for 5 mins)*
+![Account Locked](AccountLocked.png)
+
+**Inactivity Timeout (Session Expired)**
+*(Screen where it shows session expired due to inactivity)*
+![Inactivity Timeout](Inactivity.png)
+
+### Admin Dashboard Access
+
+**Products Management**
+*(Admin's side of products management. Admin can see product name, price, number of stocks, and do actions onto it)*
+![Products Management](ProductsManagement.png)
+
+**Admin Adding a Product**
+*(When admin is adding a product)*
+![Add Product](AddProduct.png)
+
+**Orders Dashboard (List of Orders overview)**
+*(Admin's dashboard of orders showing the list of orders with corresponding full name, products, status, and actions)*
+![Orders Dashboard](Orders2.png)
+
+**Update Order Status**
+*(Admin can change the status of the user's order, whether pending for delivery, delivered, or canceled)*
+![Update Order Status](Orders.png)
+
+**User Management Dashboard**
+*(Admin's dashboard of users where the admin can see their full names, emails, statuses, and edit actions)*
+![User Management](UserManagement.png)
 
 ---
-*Developed by Clarence ABCDEE Glorioso as the capstone evaluation project for the PurpleBug Internship Application (April 2026).*
+*Developed by Clarence ABCDEE Glorioso as the evaluation project for the PurpleBug Internship Application (April 2026).*
