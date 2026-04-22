@@ -1,5 +1,5 @@
-﻿<template>
-  <CustomerLayout @open-cart="showCart = true">
+<template>
+  <CustomerLayout @open-cart="showCart = true" @open-orders="openMyOrders">
     <div class="flex flex-col min-h-full pb-16">
 
       <!-- Search & Sort Bar -->
@@ -228,6 +228,68 @@
       </div>
     </Teleport>
 
+    <!-- Modal: My Orders -->
+    <Teleport to="body">
+      <div v-if="showOrders" class="fixed inset-0 z-50 flex items-center justify-center bg-black/10 backdrop-blur-[1px]" @click.self="showOrders = false">
+        <div class="bg-white w-full max-w-[800px] shadow-2xl flex flex-col h-[75vh] relative m-4 border border-gray-100">
+          
+          <button @click="showOrders = false" class="absolute top-8 right-8 text-gray-400 hover:text-gray-700 z-10 transition-colors">
+            <XIcon class="w-6 h-6" />
+          </button>
+
+          <!-- Header -->
+          <div class="flex justify-between items-center px-12 py-8 mt-2">
+            <div class="flex items-center gap-3 text-[#8b3f98]">
+              <ClipboardListIcon class="w-8 h-8" />
+              <h2 class="text-3xl font-extrabold tracking-tight">My Orders</h2>
+            </div>
+          </div>
+          
+          <div class="px-12">
+            <hr class="border-gray-500 mb-6">
+          </div>
+
+          <!-- Orders List -->
+          <div class="flex-1 overflow-y-auto px-12 pb-8">
+            <div v-if="ordersLoading" class="text-center py-20 text-gray-400 font-bold">Loading orders...</div>
+            <div v-else-if="myOrders.length === 0" class="text-center py-20 text-gray-400 font-bold">No orders yet.</div>
+            <div v-else class="space-y-8">
+              <div v-for="order in myOrders" :key="order.id" class="border border-gray-100 rounded-lg shadow-sm p-6">
+                <!-- Order Header -->
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center gap-3">
+                    <span class="text-[13px] font-bold text-gray-500">Order #{{ order.id }}</span>
+                    <span class="text-[10px] text-gray-400">{{ new Date(order.created_at).toLocaleString() }}</span>
+                  </div>
+                  <span class="px-4 py-1.5 text-[11px] font-bold text-white rounded shadow-sm" :class="orderStatusBadge(order.status)">
+                    {{ formatOrderStatus(order.status) }}
+                  </span>
+                </div>
+                <!-- Order Items -->
+                <div v-for="item in order.items" :key="item.id" class="flex items-center gap-4 py-2 border-t border-gray-50">
+                  <div class="w-[60px] h-[60px] bg-[#e2e8f0] rounded flex items-center justify-center flex-shrink-0 overflow-hidden">
+                    <img v-if="item.product?.image" :src="`http://localhost:8000/storage/${item.product.image}`" class="w-full h-full object-cover" />
+                    <ImageIcon v-else class="w-6 h-6 text-[#cbd5e1]" />
+                  </div>
+                  <div class="flex-1">
+                    <h4 class="text-[13px] font-bold text-[#8b3f98]">{{ item.product?.name || 'Product' }}</h4>
+                    <p class="text-[11px] text-gray-500">Qty: {{ item.quantity }} &times; P{{ Number(item.price).toLocaleString(undefined, { minimumFractionDigits: 2 }) }}</p>
+                  </div>
+                  <span class="text-sm font-extrabold text-black">P{{ Number(item.quantity * item.price).toLocaleString(undefined, { minimumFractionDigits: 2 }) }}</span>
+                </div>
+                <!-- Order Total -->
+                <div class="flex justify-end pt-3 mt-2 border-t border-gray-200">
+                  <span class="text-sm font-bold text-gray-500 mr-2">Total:</span>
+                  <span class="text-lg font-extrabold text-black">P{{ Number(order.total).toLocaleString(undefined, { minimumFractionDigits: 2 }) }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </Teleport>
+
   </CustomerLayout>
 </template>
 
@@ -247,7 +309,8 @@ import {
   ShoppingCart as ShoppingCartIcon,
   X as XIcon,
   XCircle as XCircleIcon,
-  ShoppingBag as ShoppingBagIcon
+  ShoppingBag as ShoppingBagIcon,
+  ClipboardList as ClipboardListIcon
 } from 'lucide-vue-next'
 
 const auth = useAuthStore()
@@ -265,6 +328,10 @@ const sortOrder = ref('asc')
 const showAddToCart    = ref(false)
 const showCart         = ref(false)
 const showSuccessModal = ref(false)
+const showOrders       = ref(false)
+
+const myOrders       = ref([])
+const ordersLoading  = ref(false)
 
 const selectedProduct = ref(null)
 const qty             = ref(1)
@@ -339,6 +406,41 @@ async function fetchProducts() {
   const res = await api.get('/products')
   products.value = res.data
   loading.value = false
+}
+
+async function fetchMyOrders() {
+  ordersLoading.value = true
+  try {
+    const res = await api.get('/my-orders')
+    myOrders.value = res.data
+  } catch (e) {
+    // silently fail
+  } finally {
+    ordersLoading.value = false
+  }
+}
+
+async function openMyOrders() {
+  showOrders.value = true
+  await fetchMyOrders()
+}
+
+function orderStatusBadge(status) {
+  return {
+    pending:      'bg-[#ff9800]',
+    for_delivery: 'bg-[#c0ca33]',
+    delivered:    'bg-[#5cb85c]',
+    canceled:     'bg-[#d9534f]',
+  }[status] || 'bg-gray-500'
+}
+
+function formatOrderStatus(status) {
+  return {
+    pending:      'Pending',
+    for_delivery: 'For Delivery',
+    delivered:    'Delivered',
+    canceled:     'Canceled',
+  }[status] || status
 }
 
 onMounted(async () => {

@@ -30,6 +30,10 @@ class CartController extends Controller
                         ->first();
 
         if ($cartItem) {
+            // Prevent adding more than available stock
+            if ($cartItem->quantity + 1 > $product->stock) {
+                return response()->json(['message' => 'Cannot add more. Stock limit reached.'], 422);
+            }
             $cartItem->increment('quantity');
         } else {
             Cart::create([

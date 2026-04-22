@@ -170,6 +170,10 @@ Because we ran the database seeder above, a master Admin account has already bee
 *(Thank you popup modal)*
 ![Thank You Modal](Thankyou.png)
 
+**Guest "My Orders" Modal**
+*(Customer's order history and statuses)*
+![My Orders](MyOrders.png)
+
 ### Authentication & Exam Security Requirements
 
 **Registration Page**

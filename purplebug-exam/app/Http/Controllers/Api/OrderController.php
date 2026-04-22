@@ -31,6 +31,15 @@ class OrderController extends Controller
             return response()->json(['message' => 'Cart is empty.'], 422);
         }
 
+        // Validate sufficient stock for every cart item before processing
+        foreach ($cartItems as $item) {
+            if ($item->quantity > $item->product->stock) {
+                return response()->json([
+                    'message' => "Insufficient stock for {$item->product->name}. Available: {$item->product->stock}, Requested: {$item->quantity}."
+                ], 422);
+            }
+        }
+
         $total = $cartItems->sum(fn($item) => $item->quantity * $item->product->price);
 
         $order = Order::create([
@@ -67,5 +76,14 @@ class OrderController extends Controller
         $order->update(['status' => $request->status]);
         ActivityLogService::log('update_order_status', "Order #{$order->id} status set to {$request->status}");
         return response()->json($order);
+    }
+
+    // Admin: delete an order
+    public function destroy(Order $order)
+    {
+        ActivityLogService::log('delete_order', "Deleted order #{$order->id}");
+        $order->items()->delete();
+        $order->delete();
+        return response()->json(['message' => 'Order deleted.']);
     }
 }

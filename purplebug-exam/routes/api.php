@@ -43,6 +43,7 @@ Route::middleware(['auth:sanctum', 'inactivity'])->group(function () {
         // Order management
         Route::get('/orders',              [OrderController::class, 'allOrders']);
         Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus']);
+        Route::delete('/orders/{order}',   [OrderController::class, 'destroy']);
 
         // Logs
         Route::get('/logs', function () {

@@ -42,7 +42,12 @@ class AuthController extends Controller
 
         // Check if locked
         if ($user && $user->locked_until && Carbon::now()->lessThan($user->locked_until)) {
-            return response()->json(['message' => 'Account locked. Try again in 5 minute.'], 423);
+            return response()->json(['message' => 'Account locked. Try again in 5 minutes.'], 423);
+        }
+
+        // Reset attempts once the lock period has expired
+        if ($user && $user->locked_until && Carbon::now()->greaterThanOrEqualTo($user->locked_until)) {
+            $user->update(['login_attempts' => 0, 'locked_until' => null]);
         }
 
         if (!$user || !Hash::check($request->password, $user->password)) {

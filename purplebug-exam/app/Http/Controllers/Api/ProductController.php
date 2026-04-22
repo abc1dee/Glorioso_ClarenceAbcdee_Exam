@@ -47,11 +47,13 @@ class ProductController extends Controller
             'image' => 'nullable|image|max:2048',
         ]);
 
+        $data = $request->only(['name', 'price', 'stock']);
+
         if ($request->hasFile('image')) {
-            $product->image = $request->file('image')->store('products', 'public');
+            $data['image'] = $request->file('image')->store('products', 'public');
         }
 
-        $product->update($request->only(['name', 'price', 'stock']));
+        $product->update($data);
         ActivityLogService::log('update_product', "Updated product {$product->name}");
         return response()->json($product);
     }

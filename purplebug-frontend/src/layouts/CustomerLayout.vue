@@ -16,9 +16,8 @@
 
             <!-- Profile Info -->
             <div class="flex items-center gap-3">
-              <div class="w-11 h-11 rounded-full overflow-hidden border border-gray-100 flex-shrink-0 flex items-center justify-center bg-gray-100">
-                <img v-if="auth.isLoggedIn && auth.user?.avatar" :src="auth.user.avatar" class="w-full h-full object-cover">
-                <img v-else src="https://i.pravatar.cc/150?img=5" class="w-full h-full object-cover" />
+              <div class="w-11 h-11 rounded-full overflow-hidden border border-gray-100 flex-shrink-0 flex items-center justify-center bg-purple-100">
+                <UserIcon class="w-6 h-6 text-[#8b3f98]" />
               </div>
               <div class="flex flex-col">
                 <span class="text-[15px] font-bold text-gray-800 leading-tight">
@@ -29,6 +28,11 @@
                 </span>
               </div>
             </div>
+
+            <!-- My Orders Icon (logged-in users only) -->
+            <button v-if="auth.isLoggedIn" @click="handleOrdersClick" class="relative text-[#8b3f98] hover:text-purple-900 transition-colors" title="My Orders">
+              <ClipboardListIcon class="w-8 h-8" stroke-width="2" />
+            </button>
 
             <!-- Cart Icon and Action -->
             <button @click="handleCartClick" class="relative text-[#8b3f98] hover:text-purple-900 transition-colors">
@@ -79,7 +83,8 @@ import {
   User as UserIcon,
   LogOut as LogOutIcon,
   LockKeyhole as LockIcon,
-  PenLine as PenToolIcon
+  PenLine as PenToolIcon,
+  ClipboardList as ClipboardListIcon
 } from 'lucide-vue-next'
 
 const emit = defineEmits(['open-cart', 'open-orders'])
@@ -95,6 +100,10 @@ function handleCartClick() {
     return;
   }
   emit('open-cart');
+}
+
+function handleOrdersClick() {
+  emit('open-orders');
 }
 
 async function handleLogout() {
